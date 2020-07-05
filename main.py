@@ -1,6 +1,7 @@
 import os
 import shutil
-from datetime import datetime
+from datetime import datetime, date
+from log import logFile
 
 
 class Organiser:
@@ -33,6 +34,8 @@ class Organiser:
         self.path = os.getcwd()
         self.filename = ""
         print("new dir " + os.getcwd())
+        logFile(log='\n'+str(date.today()))
+        logFile(log=f"following changes are applied on {self.path} Directory")
         # print("os path ",os.path)
         self.run()
 
@@ -42,6 +45,8 @@ class Organiser:
             for dir in dirs:
                 if os.path.isfile(os.path.join(self.path, dir)):
                     self.filename = dir.name
+                    if self.filename == "log.txt":
+                        continue
                     print(self.filename)
                     file, extension = self.find_extension(filename=self.filename)
                     print(f"{file} is in  {extension} format")
@@ -58,15 +63,19 @@ class Organiser:
                         if os.path.exists(os.path.join(self.path, folderName+"\\"+self.filename)):
                             t = self.currentTime()
                             os.rename(self.filename, file+t+"."+extension)
+                            logFile(log=f"{self.filename} rename to {file+t+'.'+extension}")
                             self.filename = file+t+"."+extension
 
                         # moveing file to folder
+                        logFile(log=f"{self.filename} moved to {folderName} ")
                         shutil.move(os.path.join(self.path, self.filename), os.path.join(self.path, folderName))
 
                     else:
                         os.mkdir(os.path.join(self.path, folderName))
                         print(folderName, f"folder created for {extension} files")
+                        logFile(log=f"{folderName} folder created for {extension} files")
                         shutil.move(os.path.join(self.path, self.filename), os.path.join(self.path, folderName))
+                        logFile(log=f"{self.filename} moved to {folderName} ")
 
     def find_extension(self, filename):
         file, extension = filename.rsplit('.', 1)
