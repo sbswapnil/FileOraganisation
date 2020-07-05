@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import filedialog
 import os
 from main import Organiser
+from tkinter import messagebox
 
 
 class Root(Tk):
@@ -52,10 +53,11 @@ class Root(Tk):
 
     def apply(self):
         self.PATH = self.entry.get()
-        Organiser(self.get_text_entry())
-        self.quit()
-        # self.o = Organiser()
-        # self.popupmsg(f"are you sure you want to organize {self.PATH}  this file !!")
+        status = messagebox.askyesno(title="Apply changes", message=f"Are you sure you want to organise {self.PATH}  this folder ?")
+        if status:
+            Organiser(self.get_text_entry())
+            self.quit()
+
 
     def quit(self):
         self.destroy()
